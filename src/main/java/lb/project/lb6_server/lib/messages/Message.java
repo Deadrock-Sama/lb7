@@ -1,0 +1,94 @@
+package lb.project.lb6_server.lib.messages;
+
+import lb.project.lb6_server.server.logic.commands.Command;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+import java.nio.ByteBuffer;
+
+public class Message implements Serializable {
+    private String commandName;
+
+    private Serializable entity;
+
+    public Message(String commandName, Serializable entity) {
+        this(commandName);
+        this.entity = entity;
+    }
+
+    public Message(String commandName) {
+        this.commandName = commandName;
+    }
+
+    public Message(Serializable entity) {
+        this.entity = entity;
+    }
+
+    public Message(ByteBuffer buffer) {
+
+        buffer.flip();
+        byte[] bytes = new byte[buffer.remaining()];
+        buffer.get(bytes);
+
+        ObjectInputStream in = null;
+        try {
+            in = new ObjectInputStream(new ByteArrayInputStream(bytes));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Message message = null;
+        try {
+            message = (Message)in.readObject();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            in.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        this.entity = message.entity;
+        this.commandName = message.commandName;
+
+    }
+
+    public Message(byte[] bytes) {
+
+        ObjectInputStream in = null;
+        try {
+            in = new ObjectInputStream(new ByteArrayInputStream(bytes));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Message message = null;
+        try {
+            message = (Message)in.readObject();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            in.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        this.entity = message.entity;
+        this.commandName = message.commandName;
+
+    }
+
+    public Serializable getEntity() {
+        return entity;
+    }
+
+    public String getCommandName() {
+        return commandName;
+    }
+}
