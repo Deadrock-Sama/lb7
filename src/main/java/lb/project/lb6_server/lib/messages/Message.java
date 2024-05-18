@@ -2,10 +2,7 @@ package lb.project.lb6_server.lib.messages;
 
 import lb.project.lb6_server.server.logic.commands.Command;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.nio.ByteBuffer;
 
 public class Message implements Serializable {
@@ -68,7 +65,11 @@ public class Message implements Serializable {
         Message message = null;
         try {
             message = (Message)in.readObject();
-        } catch (IOException e) {
+        }
+        catch (EOFException e) {
+            message = null;
+        }
+        catch (IOException e) {
             throw new RuntimeException(e);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);

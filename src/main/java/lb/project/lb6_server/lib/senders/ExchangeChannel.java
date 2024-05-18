@@ -24,7 +24,7 @@ public class ExchangeChannel {
     public ExchangeChannel(SocketAddress host) {
         try {
             channel = DatagramChannel.open();
-            channel.socket().setSoTimeout(5000);
+            channel.socket().setSoTimeout(200000);
             channel.bind(host);
         } catch (IOException e) {
             throw new RuntimeException(e);

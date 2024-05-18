@@ -21,8 +21,8 @@ public class WorkersHashtable implements IWorkersRepository {
         infoBuilder.append("Дата инициализации: " + initDate + "\n");
         infoBuilder.append("Кол-во элементов: " + workers.size() + "\n");
         infoBuilder.append("Тип коллекции: " + workers.getClass() + "\n");
-        infoBuilder.append("Данные: \n");
-        infoBuilder.append(workers.toString());
+        //infoBuilder.append("Данные: \n");
+        //infoBuilder.append(workers.toString());
 
         return infoBuilder.toString();
     }

@@ -19,7 +19,7 @@ public class ClientApplication {
             boolean result = commandsController.getCommand(uiController.readString("Введите команду: ")).exexute();
 
             if (result)
-                uiController.show("Команда успешно выполнена!", false);
+                uiController.show("Команда успешно выполнена!", true);
             else
                 uiController.show("Ошибка сервера! Попробуйте еще раз!");
         }
