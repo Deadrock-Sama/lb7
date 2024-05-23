@@ -14,6 +14,14 @@ public class WorkersHashtable implements IWorkersRepository {
 
     private Map<Integer, Worker> workers = new Hashtable<Integer, Worker>();
     private LocalDateTime initDate = LocalDateTime.now();
+
+    public WorkersHashtable(Map<Integer, Worker> workers) {
+        this.workers = workers;
+    }
+
+    public WorkersHashtable() {
+    }
+
     @Override
     public String info() {
 
@@ -21,8 +29,6 @@ public class WorkersHashtable implements IWorkersRepository {
         infoBuilder.append("Дата инициализации: " + initDate + "\n");
         infoBuilder.append("Кол-во элементов: " + workers.size() + "\n");
         infoBuilder.append("Тип коллекции: " + workers.getClass() + "\n");
-        //infoBuilder.append("Данные: \n");
-        //infoBuilder.append(workers.toString());
 
         return infoBuilder.toString();
     }
@@ -34,7 +40,10 @@ public class WorkersHashtable implements IWorkersRepository {
 
     @Override
     public void update(int key, Worker worker) {
-        workers.put(key, worker);
+
+        Worker workerToUpdate = workers.get(key);
+        workerToUpdate.copyData(worker);
+
     }
 
     @Override
@@ -64,6 +73,16 @@ public class WorkersHashtable implements IWorkersRepository {
                 .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue())));
     }
 
+    public List<Worker> getLowerWorkers(Worker worker) {
+        return workers
+                .entrySet()
+                .stream()
+                .map(e -> e.getValue())
+                .filter(e -> (e.compareTo(worker) <= 0))
+                .toList();
+    }
+
+
     @Override
     public void replaceWithGreaterWorker(int key, Worker worker) {
         if (workers.containsKey(key) && workers.get(key).compareTo(worker) > 0)
@@ -77,6 +96,14 @@ public class WorkersHashtable implements IWorkersRepository {
                 .stream()
                 .filter(e -> (e.getKey().compareTo(key) <= 0))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+    }
+
+    public List<Worker> getListOfWorkersWithGreaterKey(int key) {
+        return workers.entrySet()
+                .stream()
+                .filter(e -> (e.getKey().compareTo(key) > 0))
+                .map(e -> e.getValue())
+                .toList();
     }
 
     @Override
@@ -106,5 +133,9 @@ public class WorkersHashtable implements IWorkersRepository {
                 .sorted(Comparator.reverseOrder())
                 .toList();
 
+    }
+
+    public Worker getByKey(int key) {
+        return workers.get(key);
     }
 }

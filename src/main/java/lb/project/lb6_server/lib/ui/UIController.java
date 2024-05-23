@@ -18,5 +18,7 @@ public interface UIController {
 
     boolean isFileMode();
 
+    char[] readPassword(String message);
+
     void show(String message, boolean showInFileMode);
 }

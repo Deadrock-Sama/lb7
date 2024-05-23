@@ -21,11 +21,16 @@ public class ServerApplication {
     @EventListener(ContextRefreshedEvent.class)
     public void start() {
 
+
+
         Runnable listener = () -> {
 
             try {
-                Message message = exchangeChannel.recieveMessage();
-                commandsController.getCommand(message.getCommandName()).exexute(message.getEntity());
+                Message message = exchangeChannel.recieveMessage();//чтение
+
+
+
+                commandsController.getCommand(message.getCommandName()).exexute(message.getEntity(), message.getUser()); //обработка
             } catch (Exception e) {
 
             }
@@ -36,7 +41,7 @@ public class ServerApplication {
         executor.scheduleAtFixedRate(listener, 0, 3, TimeUnit.SECONDS);
 
       while (true) {
-            boolean result = commandsController.getCommand(uiController.readString("Введите команду: ")).exexute(null);
+            boolean result = commandsController.getCommand(uiController.readString("Введите команду: ")).exexute(null, null);
 
             if (result)
                uiController.show("Команда успешно выполнена!", false);

@@ -13,7 +13,7 @@ public class PrintDescending extends DataManageCommand {
     @Override
     public boolean exexute() {
 
-        Message message = new Message("print_descending");
+        Message message = new Message("print_descending", getUser());
         if (!getExchangeChannel().sendMesssage(message)) {
             getUiController().show("Ошибка при отправке запроса на сервер!");
             return false;

@@ -17,8 +17,10 @@ public class Insert extends DataManageCommand {
                 .setRequiredFields()
                 .build();
 
+        worker.setOwner(getUser());
+
         KeyValuePair pair = new KeyValuePair(key, worker);
-        Message message = new Message("insert", pair);
+        Message message = new Message("insert", pair, getUser());
 
         return getExchangeChannel().sendMesssage(message);
     }

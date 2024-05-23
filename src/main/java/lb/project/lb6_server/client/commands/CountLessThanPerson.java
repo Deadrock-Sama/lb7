@@ -16,7 +16,7 @@ public class CountLessThanPerson extends DataManageCommand {
                 .setRequiredFields()
                 .build();
 
-        Message message = new Message("count_less_than_person", person);
+        Message message = new Message("count_less_than_person", person, getUser());
         if (!getExchangeChannel().sendMesssage(message)) {
             getUiController().show("Ошибка при отправке запроса на сервер!");
             return false;

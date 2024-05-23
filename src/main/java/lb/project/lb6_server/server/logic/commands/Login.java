@@ -2,17 +2,16 @@ package lb.project.lb6_server.server.logic.commands;
 
 import lb.project.lb6_server.lib.entities.User;
 import lb.project.lb6_server.lib.messages.Message;
-import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 
-@Component("info")
-public class Info extends DataManageCommand {
-
+public class Login extends Command{
     @Override
     public boolean exexute(Serializable entity, User user) {
-        Message message =  new Message("info", getWorkersRepository().info());
 
-        return  getExchangeChannel().sendMesssage(message);
+        boolean result = isUserExists((User)entity);
+        Message message = new Message("login", result);
+
+        return getExchangeChannel().sendMesssage(message);
     }
 }

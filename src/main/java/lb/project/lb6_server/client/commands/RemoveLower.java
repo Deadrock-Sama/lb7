@@ -17,7 +17,7 @@ public class RemoveLower extends DataManageCommand {
                 .setRequiredFields()
                 .build();
 
-        Message message = new Message("remove_lower", worker);
+        Message message = new Message("remove_lower", worker, getUser());
         return getExchangeChannel().sendMesssage(message);
 
     }

@@ -1,12 +1,19 @@
 package lb.project.lb6_server.lib.entities;
 
+import jakarta.persistence.*;
+
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 import java.util.Objects;
 import java.util.UUID;
-
+@Entity
 public class Person implements Comparable<Person>, Serializable {
 
-    public Person(java.time.ZonedDateTime birthday, Double height, Location location, String passportID) {
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    public Person(ZonedDateTime birthday, Double height, Location location, String passportID) {
 
         this.birthday = Objects.requireNonNull(birthday, "birthday must not be null");
         this.height = Objects.requireNonNull(height, "height must not be null");
@@ -22,6 +29,9 @@ public class Person implements Comparable<Person>, Serializable {
         this.passportID = UUID.randomUUID().toString();
     }
 
+    public Person() {
+
+    }
 
 
     @Override
@@ -39,10 +49,25 @@ public class Person implements Comparable<Person>, Serializable {
                 '}';
     }
 
-    private java.time.ZonedDateTime birthday;
+    private ZonedDateTime birthday;
     private Double height;
     private String passportID;
     private Location location;
+    @OneToOne
+    @JoinColumn(name = "location_id", nullable = false)
+    public Location getLocation() {
+        return location;
+    }
 
+    public void setLocation(Location location) {
+        this.location = location;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
+    }
 }

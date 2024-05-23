@@ -1,18 +1,19 @@
 package lb.project.lb6_server.client.commands;
 
-import lb.project.lb6_server.lib.entities.Worker;
+import lb.project.lb6_server.client.builders.UserBuilder;
+import lb.project.lb6_server.lib.entities.User;
 import lb.project.lb6_server.lib.messages.Message;
-import org.springframework.stereotype.Component;
 
-import java.util.List;
-
-@Component("show")
-public class Show extends DataManageCommand {
-
+public class Login extends Command {
     @Override
     public boolean exexute() {
-        Message message = new Message("show", getUser());
 
+        User user = new UserBuilder(getUiController())
+                .setLogin()
+                .setPassword()
+                .build();
+
+        Message message = new Message("login", user);
         if (!getExchangeChannel().sendMesssage(message)) {
             getUiController().show("Ошибка при отправке запроса на сервер!");
             return false;
@@ -22,8 +23,11 @@ public class Show extends DataManageCommand {
         if (response == null)
             return false;
 
-        List<Worker> workers = (List<Worker>)response.getEntity();
-        getUiController().show(workers.toString());
-        return true;
+        if ((boolean)response.getEntity()) {
+            setUser(user);
+            return true;
+        }
+
+        return false;
     }
 }

@@ -1,5 +1,6 @@
 package lb.project.lb6_server.lib.messages;
 
+import lb.project.lb6_server.lib.entities.User;
 import lb.project.lb6_server.server.logic.commands.Command;
 
 import java.io.*;
@@ -10,18 +11,29 @@ public class Message implements Serializable {
 
     private Serializable entity;
 
+    private User user;
+
+    public Message(String commandName, Serializable entity, User user) {
+        this(commandName, user);
+        this.entity = entity;
+    }
+
     public Message(String commandName, Serializable entity) {
-        this(commandName);
-        this.entity = entity;
-    }
-
-    public Message(String commandName) {
         this.commandName = commandName;
-    }
-
-    public Message(Serializable entity) {
         this.entity = entity;
     }
+
+    public Message(String commandName, User user) {
+        this.commandName = commandName;
+        this.user = user;
+    }
+
+    public Message(Serializable entity, User user) {
+        this.entity = entity;
+        this.user = user;
+    }
+
+
 
     public Message(ByteBuffer buffer) {
 
@@ -92,4 +104,6 @@ public class Message implements Serializable {
     public String getCommandName() {
         return commandName;
     }
+
+    public User getUser() { return user; }
 }

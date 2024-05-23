@@ -10,7 +10,7 @@ public class Info extends DataManageCommand {
     @Override
     public boolean exexute() {
 
-        Message message = new Message("info", null);
+        Message message = new Message("info", null, getUser());
         if (!getExchangeChannel().sendMesssage(message)) {
             getUiController().show("Ошибка при отправке запроса на сервер!");
             return false;

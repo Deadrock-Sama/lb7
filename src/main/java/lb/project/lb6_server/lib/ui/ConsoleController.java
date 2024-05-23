@@ -157,6 +157,11 @@ public class ConsoleController implements UIController {
 
     }
 
+    public char[] readPassword(String message) {
+        char[] passwordArray = System.console().readPassword(message);
+        return passwordArray;
+
+    }
     private void skipWrongInput() {
         try {
         scanner.next();

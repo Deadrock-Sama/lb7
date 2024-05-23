@@ -15,7 +15,7 @@ public class FilterContainsName extends DataManageCommand {
 
         String substring = getUiController().readString("Введите подстроку: ");
 
-        Message message = new Message("filter_contains_name", substring);
+        Message message = new Message("filter_contains_name", substring, getUser());
         if (!getExchangeChannel().sendMesssage(message)) {
             getUiController().show("Ошибка при отправке запроса на сервер!");
             return false;

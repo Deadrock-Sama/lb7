@@ -18,7 +18,7 @@ public class ReplaceIfGreater extends DataManageCommand {
                 .build();
 
         KeyValuePair pair = new KeyValuePair(key, worker);
-        Message message = new Message("replace_if_greater", pair);
+        Message message = new Message("replace_if_greater", pair, getUser());
 
         return getExchangeChannel().sendMesssage(message);
     }

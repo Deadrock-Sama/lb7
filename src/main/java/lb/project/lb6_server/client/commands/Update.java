@@ -17,7 +17,7 @@ public class Update extends DataManageCommand {
                 .build();
 
         KeyValuePair pair = new KeyValuePair(key, worker);
-        Message message = new Message("update", pair);
+        Message message = new Message("update", pair, getUser());
 
         return getExchangeChannel().sendMesssage(message);
     }

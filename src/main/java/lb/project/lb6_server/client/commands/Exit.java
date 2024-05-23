@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 public class Exit extends Command {
     @Override
     public boolean exexute() {
-        Message message = new Message("save", null);
+        Message message = new Message("save", getUser());
         getExchangeChannel().sendMesssage(message);
         System.exit(0);
         return false;

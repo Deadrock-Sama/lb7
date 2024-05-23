@@ -8,7 +8,7 @@ public class Clear extends DataManageCommand {
 
     @Override
     public boolean exexute() {
-        Message message = new Message("clear");
+        Message message = new Message("clear", getUser());
         return getExchangeChannel().sendMesssage(message);
     }
 }

@@ -4,17 +4,21 @@ import lb.project.lb6_server.lib.messages.Message;
 import org.springframework.util.SerializationUtils;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.DatagramPacket;
 import java.net.SocketAddress;
 import java.net.SocketTimeoutException;
 import java.net.StandardSocketOptions;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
+import java.util.ArrayList;
 
 public class ExchangeChannel {
 
     private SocketAddress target;
     private DatagramChannel channel;
+
+    private ArrayList<DatagramChannel> channels;
 
     public ExchangeChannel(SocketAddress target, SocketAddress host) {
         this(host);

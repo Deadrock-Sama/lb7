@@ -1,5 +1,6 @@
 package lb.project.lb6_server.server.logic.commands;
 
+import lb.project.lb6_server.lib.entities.User;
 import lb.project.lb6_server.server.data.savers.ISaver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,7 +13,7 @@ import java.io.Serializable;
 public class Save extends DataManageCommand {
 
     @Override
-    public boolean exexute(Serializable entity) {
+    public boolean exexute(Serializable entity, User user) {
         keeper.save(getWorkersRepository());
         return true;
     }

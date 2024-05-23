@@ -9,7 +9,7 @@ public class RemoveGreaterKey extends DataManageCommand {
     @Override
     public boolean exexute() {
         int key = getUiController().readInteger("Введите клюс: ");
-        Message message = new Message("remove_greater_key", key);
+        Message message = new Message("remove_greater_key", key, getUser());
         return getExchangeChannel().sendMesssage(message);
     }
 

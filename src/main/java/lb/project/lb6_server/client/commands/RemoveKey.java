@@ -8,8 +8,8 @@ public class RemoveKey extends DataManageCommand {
 
     @Override
     public boolean exexute() {
-        int key = getUiController().readInteger("Введите клюс: ");
-        Message message = new Message("remove_key", key);
+        int key = getUiController().readInteger("Введите ключ: ");
+        Message message = new Message("remove_key", key, getUser());
         return getExchangeChannel().sendMesssage(message);
 
     }

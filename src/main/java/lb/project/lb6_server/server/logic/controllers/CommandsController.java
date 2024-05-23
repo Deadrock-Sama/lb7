@@ -17,15 +17,6 @@ public class CommandsController implements ICommandsController{
 
         return empty;
     }
-
-    public Command getServerCommand(String input) {
-        Command empty = serverCommands.get("empty");
-        if (input != null)
-            return serverCommands.getOrDefault(input.toLowerCase(), empty);
-
-        return empty;
-    }
-
     @Autowired
     private Map<String, Command> commands;
 
