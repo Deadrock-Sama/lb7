@@ -6,16 +6,23 @@ import lb.project.lb6_server.lib.ui.UIController;
 import lb.project.lb6_server.server.data.IWorkersRepository;
 import lb.project.lb6_server.server.data.savers.ISaver;
 import lb.project.lb6_server.server.data.savers.json.JsonSaver;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
 @Configuration
-@ComponentScan({"lb.project.lb6_server.server", "lb.project.lb6_server.lib"})
+@ComponentScan({"lb.project.lb6_server.server", "lb.project.lb6_server.lib.*"})
+
+@EnableJpaRepositories(basePackages =
+        "lb.project.lb6_server.server.data.savers.db")
+@EntityScan("lb.project.lb6_server.lib.entities")
 public class ServerConfig {
 
     @Bean("CurrentKeeper")
@@ -24,19 +31,13 @@ public class ServerConfig {
         return keeper;
     }
 
-    @Bean("WorkersHashTable")
-    @DependsOn("CurrentKeeper")
-    public IWorkersRepository getWorkersRepository() {
-        return keeper.load();
-    }
-
     @Bean("ConsoleController")
     public UIController getConsoleController() {
         return new ConsoleController();
     }
 
     @Bean("ServerChannel")
-    public ExchangeChannel getChannel() {
+    public SynchronizedExchangeChannel getChannel() {
 
         String port = System.getenv("SERVER_PORT");
         if (port==null) {
@@ -48,7 +49,7 @@ public class ServerConfig {
 
         SocketAddress serverAddress =  new InetSocketAddress(address, serverPort);
 
-        return new ExchangeChannel(serverAddress);
+        return new SynchronizedExchangeChannel(serverAddress);
 
     }
 

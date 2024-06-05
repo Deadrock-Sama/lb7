@@ -10,7 +10,7 @@ public class RemoveKey extends DataManageCommand {
 
     @Override
     public boolean exexute(Serializable key, User user) {
-        getWorkersRepository().remove((int)key);
+        getWorkersRepository().remove((int)key, user);
         return true;
     }
 }

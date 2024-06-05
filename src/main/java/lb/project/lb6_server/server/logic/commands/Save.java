@@ -14,7 +14,7 @@ public class Save extends DataManageCommand {
 
     @Override
     public boolean exexute(Serializable entity, User user) {
-        keeper.save(getWorkersRepository());
+        //keeper.save(getWorkersRepository());
         return true;
     }
 

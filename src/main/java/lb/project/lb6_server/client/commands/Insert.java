@@ -5,6 +5,7 @@ import lb.project.lb6_server.client.builders.WorkerBuilder;
 import lb.project.lb6_server.lib.entities.Worker;
 import lb.project.lb6_server.lib.messages.KeyValuePair;
 import lb.project.lb6_server.lib.messages.Message;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component("insert")

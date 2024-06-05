@@ -4,6 +4,7 @@ import lb.project.lb6_server.client.commands.Command;
 import lb.project.lb6_server.lib.entities.User;
 import lb.project.lb6_server.lib.messages.KeyValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -27,7 +28,8 @@ public class CommandsController implements ICommandsController{
         Command empty = availableCommands.get("empty");
         if (input != null) {
             Command command = availableCommands.getOrDefault(input.toLowerCase(), empty);
-            command.setUser(user);
+            if (command != null)
+                command.setUser(user);
 
             return command;
         }
@@ -41,6 +43,7 @@ public class CommandsController implements ICommandsController{
     private Map<String, Command> commands;
 
     @Autowired
+    @Qualifier("Authorization")
     private Map<String, Command> authorizationCommands;
 
     private User user;

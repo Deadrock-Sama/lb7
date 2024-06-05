@@ -14,7 +14,7 @@ public class Update extends DataManageCommand {
     public boolean exexute(Serializable entity, User user) {
 
         KeyValuePair kvp = (KeyValuePair)entity;
-        getWorkersRepository().update(kvp.getKey(), (Worker)kvp.getValue());
+        getWorkersRepository().update(kvp.getKey(), (Worker)kvp.getValue(), user);
 
         return true;
     }

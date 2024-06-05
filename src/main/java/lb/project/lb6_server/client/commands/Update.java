@@ -4,6 +4,7 @@ import lb.project.lb6_server.client.builders.WorkerBuilder;
 import lb.project.lb6_server.lib.entities.Worker;
 import lb.project.lb6_server.lib.messages.KeyValuePair;
 import lb.project.lb6_server.lib.messages.Message;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component("update")
@@ -16,6 +17,7 @@ public class Update extends DataManageCommand {
                 .setRequiredFields()
                 .build();
 
+        worker.setOwner(getUser());
         KeyValuePair pair = new KeyValuePair(key, worker);
         Message message = new Message("update", pair, getUser());
 

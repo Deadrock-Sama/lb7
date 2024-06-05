@@ -1,5 +1,6 @@
 package lb.project.lb6_server.server.logic.commands;
 
+import lb.project.lb6_server.lib.entities.User;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
@@ -8,8 +9,8 @@ import java.io.Serializable;
 public class RemoveGreaterKey extends DataManageCommand {
 
     @Override
-    public boolean exexute(Serializable key) {
-        getWorkersRepository().removeWorkersWithGreaterKey((Integer)key);
+    public boolean exexute(Serializable key, User user) {
+        getWorkersRepository().removeWorkersWithGreaterKey((Integer)key, user);
         return true;
     }
 

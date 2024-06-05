@@ -1,6 +1,7 @@
 package lb.project.lb6_server.server.data;
 
 import lb.project.lb6_server.lib.entities.Person;
+import lb.project.lb6_server.lib.entities.User;
 import lb.project.lb6_server.lib.entities.Worker;
 
 import java.util.List;
@@ -10,21 +11,21 @@ public interface IWorkersRepository {
 
     String info();
 
-    void insert(int key, Worker worker);
+    boolean insert(int key, Worker worker, User user);
 
-    void update(int key, Worker worker);
+    boolean update(int key, Worker worker, User user);
 
-    void remove(int key);
+    boolean remove(int key, User user);
 
-    void clear();
+    void clear(User user);
 
     List<Worker> selectAll();
 
-    void removeLowerWorkers(Worker worker);
+    void removeLowerWorkers(Worker worker, User user);
 
-    void replaceWithGreaterWorker(int key, Worker worker);
+    boolean replaceWithGreaterWorker(int key, Worker worker, User user);
 
-    void removeWorkersWithGreaterKey(int key);
+    void removeWorkersWithGreaterKey(int key, User user);
 
     List<Worker> selectWorkersWithSubstringInName(String substring);
 

@@ -12,7 +12,7 @@ public class RemoveLower extends DataManageCommand {
     @Override
     public boolean exexute(Serializable worker, User user) {
 
-        getWorkersRepository().removeLowerWorkers((Worker)worker);
+        getWorkersRepository().removeLowerWorkers((Worker)worker, user);
         return true;
     }
 

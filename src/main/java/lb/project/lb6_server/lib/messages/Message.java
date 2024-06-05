@@ -35,18 +35,14 @@ public class Message implements Serializable {
 
 
 
-    public Message(ByteBuffer buffer) {
+    public Message(ByteBuffer buffer) throws IOException {
 
         buffer.flip();
         byte[] bytes = new byte[buffer.remaining()];
         buffer.get(bytes);
 
         ObjectInputStream in = null;
-        try {
-            in = new ObjectInputStream(new ByteArrayInputStream(bytes));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        in = new ObjectInputStream(new ByteArrayInputStream(bytes));
         Message message = null;
         try {
             message = (Message)in.readObject();
@@ -63,6 +59,7 @@ public class Message implements Serializable {
 
         this.entity = message.entity;
         this.commandName = message.commandName;
+        this.user = message.user;
 
     }
 
@@ -94,7 +91,7 @@ public class Message implements Serializable {
 
         this.entity = message.entity;
         this.commandName = message.commandName;
-
+        this.user = message.user;
     }
 
     public Serializable getEntity() {

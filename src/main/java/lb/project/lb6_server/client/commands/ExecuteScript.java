@@ -1,5 +1,6 @@
 package lb.project.lb6_server.client.commands;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component("execute_script")

@@ -14,7 +14,7 @@ public class ReplaceIfGreater extends DataManageCommand {
     public boolean exexute(Serializable entity, User user) {
 
         KeyValuePair kvp = (KeyValuePair)entity;
-        getWorkersRepository().replaceWithGreaterWorker(kvp.getKey(), (Worker) kvp.getValue());
+        getWorkersRepository().replaceWithGreaterWorker(kvp.getKey(), (Worker) kvp.getValue(), user);
 
         return true;
     }

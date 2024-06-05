@@ -15,7 +15,7 @@ public class Insert extends DataManageCommand {
     public boolean exexute(Serializable entity, User user) {
 
         KeyValuePair kvp = (KeyValuePair)entity;
-        getWorkersRepository().insert(kvp.getKey(), (Worker)kvp.getValue());
+        getWorkersRepository().insert(kvp.getKey(), (Worker)kvp.getValue(), user);
         return true;
     }
 }

@@ -3,6 +3,7 @@ package lb.project.lb6_server.client.commands;
 import lb.project.lb6_server.client.builders.PersonBuilder;
 import lb.project.lb6_server.lib.entities.Person;
 import lb.project.lb6_server.lib.messages.Message;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 

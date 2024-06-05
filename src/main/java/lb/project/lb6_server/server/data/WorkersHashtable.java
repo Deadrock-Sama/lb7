@@ -1,22 +1,21 @@
 package lb.project.lb6_server.server.data;
 
 import lb.project.lb6_server.lib.entities.Person;
+import lb.project.lb6_server.lib.entities.User;
 import lb.project.lb6_server.lib.entities.Worker;
+import org.hibernate.sql.ast.tree.expression.Collation;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class WorkersHashtable implements IWorkersRepository {
 
-    private Map<Integer, Worker> workers = new Hashtable<Integer, Worker>();
+    private Map<Integer, Worker> workers = Collections.synchronizedMap(new Hashtable<Integer, Worker>());
     private LocalDateTime initDate = LocalDateTime.now();
 
     public WorkersHashtable(Map<Integer, Worker> workers) {
-        this.workers = workers;
+        this.workers = Collections.synchronizedMap(workers);
     }
 
     public WorkersHashtable() {
@@ -34,26 +33,44 @@ public class WorkersHashtable implements IWorkersRepository {
     }
 
     @Override
-    public void insert(int key, Worker worker) {
+    public boolean insert(int key, Worker worker, User user) {
+        if (workers.containsKey(key) && !workers.get(key).getOwner().equals(user))
+            return false;
+
         workers.put(key, worker);
+        worker.setHashtableKey(key);
+        return true;
     }
 
     @Override
-    public void update(int key, Worker worker) {
+    public boolean update(int key, Worker worker, User user) {
 
         Worker workerToUpdate = workers.get(key);
+
+        if(!workerToUpdate.getOwner().equals(user))
+            return false;
+
         workerToUpdate.copyData(worker);
-
+        return true;
     }
 
     @Override
-    public void remove(int key) {
+    public boolean remove(int key, User user)
+    {
+        if(!(workers.containsKey(key) && workers.get(key).getOwner().equals(user)))
+            return false;
+
         workers.remove(key);
+        return true;
     }
 
     @Override
-    public void clear() {
-        workers.clear();
+    public void clear(User user) {
+        workers = new Hashtable<>(workers
+                .entrySet()
+                .stream()
+                .filter(e -> (!e.getValue().getOwner().equals(user)))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
     }
 
     @Override
@@ -65,43 +82,50 @@ public class WorkersHashtable implements IWorkersRepository {
     }
 
     @Override
-    public void removeLowerWorkers(Worker worker) {
+    public void removeLowerWorkers(Worker worker, User user) {
         workers = new Hashtable<>(workers
                 .entrySet()
                 .stream()
+                .filter(e -> (!e.getValue().getOwner().equals(user)))
                 .filter(e -> (e.getValue().compareTo(worker) > 0))
                 .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue())));
     }
 
-    public List<Worker> getLowerWorkers(Worker worker) {
+    public List<Worker> getLowerWorkersByUser(Worker worker, User user) {
         return workers
                 .entrySet()
                 .stream()
                 .map(e -> e.getValue())
                 .filter(e -> (e.compareTo(worker) <= 0))
+                .filter(e -> (e.getOwner().equals(user)))
                 .toList();
     }
 
 
     @Override
-    public void replaceWithGreaterWorker(int key, Worker worker) {
-        if (workers.containsKey(key) && workers.get(key).compareTo(worker) > 0)
-            workers.put(key, worker);
+    public boolean replaceWithGreaterWorker(int key, Worker worker, User user) {
+        if (workers.containsKey(key)
+                && workers.get(key).compareTo(worker) > 0
+                && workers.get(key).getOwner().equals(user))
+        {workers.put(key, worker); return true; }
+        return false;
     }
 
     @Override
-    public void removeWorkersWithGreaterKey(int key) {
+    public void removeWorkersWithGreaterKey(int key, User user) {
         workers = new Hashtable<>(workers
                 .entrySet()
                 .stream()
+                .filter(e -> (!e.getValue().getOwner().equals(user)))
                 .filter(e -> (e.getKey().compareTo(key) <= 0))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
     }
 
-    public List<Worker> getListOfWorkersWithGreaterKey(int key) {
+    public List<Worker> getListOfWorkersWithGreaterKeyByUser(int key, User user) {
         return workers.entrySet()
                 .stream()
                 .filter(e -> (e.getKey().compareTo(key) > 0))
+                .filter(e -> (e.getValue().getOwner().equals(user)))
                 .map(e -> e.getValue())
                 .toList();
     }

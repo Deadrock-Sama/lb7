@@ -6,6 +6,7 @@ import lb.project.lb6_server.lib.ui.UIController;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -36,15 +37,15 @@ public class UserBuilder extends Builder{
 
     public User repeatPassword() {
         PasswordHasher hasher = new PasswordHasher();
-        byte[] enteredPassword = hasher.hash(controller.readPassword("Повторите пароль: "));
+        String enteredPassword = hasher.hash(controller.readPassword("Повторите пароль: "));
 
-        if (Arrays.equals(enteredPassword, password))
+        if (enteredPassword.equals(password))
             return new User(login, password);
 
         return null;
     }
     private String login;
-    private byte[] password;
+    private String password;
     private class PasswordHasher {
 
         private byte[] getSalt() {
@@ -54,18 +55,18 @@ public class UserBuilder extends Builder{
 
             return salt;
         }
-        public byte[] hash(char[] password) {
+        public String hash(char[] password) {
 
-            byte[] salt = getSalt();
+            //byte[] salt = getSalt();
             MessageDigest md = null;
             try {
                 md = MessageDigest.getInstance("MD2");
             } catch (NoSuchAlgorithmException e) {
                 throw new RuntimeException(e);
             }
-            md.update(salt);
+            md.update("123".getBytes());
 
-            byte[] hashedPassword = md.digest(toBytes(password));
+            String hashedPassword = new String(md.digest(toBytes(password)), StandardCharsets.UTF_8);
             return hashedPassword;
 
         }

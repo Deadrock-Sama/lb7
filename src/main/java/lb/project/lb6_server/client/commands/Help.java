@@ -2,9 +2,11 @@ package lb.project.lb6_server.client.commands;
 
 
 import lb.project.lb6_server.lib.ui.UIController;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component("help")
+@Qualifier("Authorization")
 public class Help extends Command {
     @Override
     public boolean exexute() {

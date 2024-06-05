@@ -4,9 +4,11 @@ import lb.project.lb6_server.client.builders.WorkerBuilder;
 import lb.project.lb6_server.lib.entities.Worker;
 import lb.project.lb6_server.lib.messages.KeyValuePair;
 import lb.project.lb6_server.lib.messages.Message;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component("replace_if_greater")
+
 public class ReplaceIfGreater extends DataManageCommand {
 
     @Override
@@ -17,6 +19,7 @@ public class ReplaceIfGreater extends DataManageCommand {
                 .setRequiredFields()
                 .build();
 
+        worker.setOwner(getUser());
         KeyValuePair pair = new KeyValuePair(key, worker);
         Message message = new Message("replace_if_greater", pair, getUser());
 

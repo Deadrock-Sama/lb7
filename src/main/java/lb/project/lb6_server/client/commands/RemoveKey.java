@@ -1,9 +1,11 @@
 package lb.project.lb6_server.client.commands;
 
 import lb.project.lb6_server.lib.messages.Message;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component("remove_key")
+
 public class RemoveKey extends DataManageCommand {
 
     @Override

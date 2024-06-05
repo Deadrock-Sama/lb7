@@ -158,7 +158,7 @@ public class ConsoleController implements UIController {
     }
 
     public char[] readPassword(String message) {
-        char[] passwordArray = System.console().readPassword(message);
+        char[] passwordArray = readString(message).toCharArray();
         return passwordArray;
 
     }
