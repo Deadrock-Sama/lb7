@@ -3,6 +3,7 @@ package lb.project.lb6_server.server.logic.commands;
 import lb.project.lb6_server.lib.entities.User;
 import lb.project.lb6_server.lib.senders.ExchangeChannel;
 import lb.project.lb6_server.lib.senders.IExchangeChannel;
+import lb.project.lb6_server.lib.senders.SynchronizedExchangeChannel;
 import lb.project.lb6_server.lib.ui.UIController;
 import lb.project.lb6_server.server.data.savers.db.UserJpaRepository;
 import lb.project.lb6_server.server.logic.aspects.AuthorizationCheck;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.io.Serializable;
+import java.net.SocketAddress;
+import java.nio.channels.SocketChannel;
 
 @AuthorizationCheck
 abstract public class Command {
@@ -18,7 +21,7 @@ abstract public class Command {
         return uiController;
     }
 
-    public IExchangeChannel getExchangeChannel() { return exchangeChannel; }
+    public SynchronizedExchangeChannel getExchangeChannel() { return exchangeChannel; }
 
     public UserJpaRepository getUserJpaRepository() {
         return userJpaRepository;
@@ -28,7 +31,7 @@ abstract public class Command {
         return userJpaRepository.existsUserByLoginAndPassword(user.getLogin(), user.getPassword());
     }
     @AuthorizationCheck
-    public abstract boolean exexute(Serializable entity, User user);
+    public abstract boolean exexute(Serializable entity, User user, SocketAddress address);
 
 
     @Autowired
@@ -37,7 +40,7 @@ abstract public class Command {
 
     @Autowired
     @Qualifier("ServerChannel")
-    private IExchangeChannel exchangeChannel;
+    private SynchronizedExchangeChannel exchangeChannel;
 
     @Autowired
     private UserJpaRepository userJpaRepository;

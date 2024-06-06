@@ -7,13 +7,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.net.SocketAddress;
 
 @Component("save")
 @Qualifier("ServerCommand")
 public class Save extends DataManageCommand {
 
     @Override
-    public boolean exexute(Serializable entity, User user) {
+    public boolean exexute(Serializable entity, User user, SocketAddress address) {
         //keeper.save(getWorkersRepository());
         return true;
     }

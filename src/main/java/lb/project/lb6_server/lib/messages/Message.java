@@ -4,6 +4,8 @@ import lb.project.lb6_server.lib.entities.User;
 import lb.project.lb6_server.server.logic.commands.Command;
 
 import java.io.*;
+import java.net.Socket;
+import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 
 public class Message implements Serializable {
@@ -12,6 +14,8 @@ public class Message implements Serializable {
     private Serializable entity;
 
     private User user;
+
+    private SocketAddress sender;
 
     public Message(String commandName, Serializable entity, User user) {
         this(commandName, user);
@@ -103,4 +107,12 @@ public class Message implements Serializable {
     }
 
     public User getUser() { return user; }
+
+    public SocketAddress getSender() {
+        return sender;
+    }
+
+    public void setSender(SocketAddress sender) {
+        this.sender = sender;
+    }
 }

@@ -6,7 +6,6 @@ import lb.project.lb6_server.server.logic.controllers.ICommandsController;
 import org.springframework.util.SerializationUtils;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
 import java.net.SocketAddress;
 import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
@@ -53,8 +52,27 @@ public class SynchronizedExchangeChannel implements IExchangeChannel{
     }
 
     public boolean sendMesssage(Message message) {
-        if (target == null) return false;
+        if (target == null || target.get() == null) return false;
         SocketAddress address = target.get();
+        Future<Boolean> result = pool.submit(() -> {
+            ByteBuffer buffer = ByteBuffer.wrap(SerializationUtils.serialize(message));
+            try {
+                int bytesSent = channel.send(buffer, address);
+                return bytesSent > 0;
+            } catch (Exception e) {
+                return false;
+            }
+        });
+
+        try {
+            return result.get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean sendMesssage(Message message, SocketAddress address) {
+        if (address == null) return false;
         Future<Boolean> result = pool.submit(() -> {
             ByteBuffer buffer = ByteBuffer.wrap(SerializationUtils.serialize(message));
             try {
@@ -78,6 +96,7 @@ public class SynchronizedExchangeChannel implements IExchangeChannel{
     }
 
 
+
     public Message receiveMessage(SelectionKey key) {
         ByteBuffer buffer = ByteBuffer.allocate(4000);
         try {
@@ -85,13 +104,17 @@ public class SynchronizedExchangeChannel implements IExchangeChannel{
             SocketAddress sender = dc.receive(buffer);
             if (sender != null) {
                 target = ThreadLocal.withInitial(() -> sender);
+                Message message = extractMessage(buffer);
+                if(message != null)
+                    message.setSender(sender);
+
+                return message;
             }
         } catch (IOException e) {
             System.out.println("Адрес недоступен!");
             throw new RuntimeException(e);
         }
-
-        return extractMessage(buffer);
+        return null;
     }
 
     public Message recieveMessageWithTimeOut() {
@@ -161,7 +184,7 @@ public class SynchronizedExchangeChannel implements IExchangeChannel{
                                 Message message = receiveMessage(key);
                                 if (message != null) {
                                     // Передаем команду на выполнение
-                                    commandsController.getCommand(message.getCommandName()).exexute(message.getEntity(), message.getUser());
+                                    commandsController.getCommand(message.getCommandName()).exexute(message.getEntity(), message.getUser(), message.getSender());
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -174,4 +197,5 @@ public class SynchronizedExchangeChannel implements IExchangeChannel{
             System.out.println("Ошибка при обработке запросов: " + e.getMessage());
         }
     }
+
 }

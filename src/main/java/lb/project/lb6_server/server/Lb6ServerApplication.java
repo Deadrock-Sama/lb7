@@ -10,4 +10,6 @@ public class Lb6ServerApplication {
         SpringApplication.run(Lb6ServerApplication.class, args);
     }
 
+
+
 }
