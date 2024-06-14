@@ -15,11 +15,7 @@ public class Save extends DataManageCommand {
 
     @Override
     public boolean exexute(Serializable entity, User user, SocketAddress address) {
-        //keeper.save(getWorkersRepository());
+        getWorkersRepository().save();
         return true;
     }
-
-    @Autowired
-    @Qualifier("CurrentKeeper")
-    private ISaver keeper;
 }

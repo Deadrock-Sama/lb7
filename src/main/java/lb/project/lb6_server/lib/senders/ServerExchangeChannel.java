@@ -1,7 +1,7 @@
 package lb.project.lb6_server.lib.senders;
 
-import lb.project.lb6_server.server.logic.controllers.CommandsController;
 import lb.project.lb6_server.lib.messages.Message;
+import lb.project.lb6_server.server.logic.controllers.CommandsController;
 import lb.project.lb6_server.server.logic.controllers.ICommandsController;
 import org.springframework.util.SerializationUtils;
 
@@ -14,12 +14,9 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.*;
 
-public class SynchronizedExchangeChannel implements IExchangeChannel{
+public class ServerExchangeChannel implements IExchangeChannel{
     private Selector selector;
 
     private ICommandsController commandsController;
@@ -28,16 +25,16 @@ public class SynchronizedExchangeChannel implements IExchangeChannel{
 
     private ExecutorService pool = Executors.newCachedThreadPool();
 
-    public SynchronizedExchangeChannel(SocketAddress target, SocketAddress host) {
+    public ServerExchangeChannel(SocketAddress target, SocketAddress host) {
         this(host);
         this.target = ThreadLocal.withInitial(() -> target);
     }
 
-    public void setCommandsController(CommandsController commandsController) {
+    public void setCommandsController(ICommandsController commandsController) {
         this.commandsController = commandsController;
     }
 
-    public SynchronizedExchangeChannel(SocketAddress host) {
+    public ServerExchangeChannel(SocketAddress host) {
         try {
             channel = DatagramChannel.open();
             channel.socket().setSoTimeout(5000);
@@ -90,13 +87,6 @@ public class SynchronizedExchangeChannel implements IExchangeChannel{
         }
     }
 
-    @Override
-    public Message recieveMessage() {
-        return null;
-    }
-
-
-
     public Message receiveMessage(SelectionKey key) {
         ByteBuffer buffer = ByteBuffer.allocate(4000);
         try {
@@ -117,36 +107,6 @@ public class SynchronizedExchangeChannel implements IExchangeChannel{
         return null;
     }
 
-    public Message recieveMessageWithTimeOut() {
-        ByteBuffer buffer = ByteBuffer.allocate(4000);
-        try {
-            if (selector.select(5000) == 0) {
-                return null; // Timeout occurred
-            }
-            Set<SelectionKey> selectedKeys = selector.selectedKeys();
-            Iterator<SelectionKey> iterator = selectedKeys.iterator();
-
-            while (iterator.hasNext()) {
-                SelectionKey key = iterator.next();
-                if (key.isReadable()) {
-                    iterator.remove();
-                    DatagramChannel dc = (DatagramChannel) key.channel();
-                    SocketAddress sender = dc.receive(buffer);
-                    if (sender != null) {
-                        target = ThreadLocal.withInitial(() -> sender);
-                    }
-                    return extractMessage(buffer);
-                }
-            }
-        } catch (SocketTimeoutException ex) {
-            return null;
-        } catch (IOException e) {
-            System.out.println("Адрес недоступен!");
-            throw new RuntimeException(e);
-        }
-        return null;
-    }
-
     private Message extractMessage(ByteBuffer buffer) {
         Message msg;
         try {
@@ -160,12 +120,8 @@ public class SynchronizedExchangeChannel implements IExchangeChannel{
         return msg;
     }
 
-    public Selector getSelector() {
-        return selector;
-    }
-
     public void processRequests() {
-        ExecutorService executorService = Executors.newCachedThreadPool();
+        ForkJoinPool pool = new ForkJoinPool(4);
 
         try {
             while (true) {
@@ -179,17 +135,16 @@ public class SynchronizedExchangeChannel implements IExchangeChannel{
                     if (key.isReadable()) {
                         iterator.remove();
 
-                        executorService.submit(() -> {
+                        pool.submit(() -> {
                             try {
                                 Message message = receiveMessage(key);
                                 if (message != null) {
-                                    // Передаем команду на выполнение
                                     commandsController.getCommand(message.getCommandName()).exexute(message.getEntity(), message.getUser(), message.getSender());
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                        });
+                        }).join();
                     }
                 }
             }

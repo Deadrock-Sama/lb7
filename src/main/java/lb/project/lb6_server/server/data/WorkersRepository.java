@@ -7,6 +7,8 @@ import lb.project.lb6_server.lib.entities.User;
 import lb.project.lb6_server.lib.entities.Worker;
 import lb.project.lb6_server.server.data.savers.db.WorkerJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,8 +20,7 @@ public class WorkersRepository implements IWorkersRepository{
     private WorkerJpaRepository jpaRepository;
 
     private WorkersHashtable hashtable;
-    @PostConstruct
-    private void loadHashtable() {
+    public void load() {
         hashtable = new WorkersHashtable(jpaRepository.findAllAsHashtable());
     }
 
@@ -30,8 +31,12 @@ public class WorkersRepository implements IWorkersRepository{
 
     @Override
     public boolean insert(int key, Worker worker, User user) {
+        Worker currentWorker = hashtable.getByKey(key);
         if(!hashtable.insert(key, worker, user))
             return false;
+
+        if(currentWorker != null)
+            jpaRepository.delete(currentWorker);
 
         jpaRepository.saveAndFlush(worker);
         return true;
@@ -113,5 +118,10 @@ public class WorkersRepository implements IWorkersRepository{
     @Override
     public List<Worker> sorted() {
         return hashtable.sorted();
+    }
+
+    @Override
+    public void save() {
+        jpaRepository.flush();
     }
 }

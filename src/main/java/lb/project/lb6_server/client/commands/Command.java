@@ -2,7 +2,8 @@ package lb.project.lb6_server.client.commands;
 
 
 import lb.project.lb6_server.lib.entities.User;
-import lb.project.lb6_server.lib.senders.ExchangeChannel;
+import lb.project.lb6_server.lib.senders.ClientExchangeChannel;
+import lb.project.lb6_server.lib.senders.IExchangeChannel;
 import lb.project.lb6_server.lib.ui.UIController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,7 +15,7 @@ abstract public class Command {
         return uiController;
     }
 
-    public ExchangeChannel getExchangeChannel() { return exchangeChannel; }
+    public ClientExchangeChannel getExchangeChannel() { return exchangeChannel; }
 
     public User getUser() {
         return user;
@@ -32,7 +33,7 @@ abstract public class Command {
 
     @Autowired
     @Qualifier("ClientChannel")
-    private ExchangeChannel exchangeChannel;
+    private ClientExchangeChannel exchangeChannel;
 
     private User user;
 

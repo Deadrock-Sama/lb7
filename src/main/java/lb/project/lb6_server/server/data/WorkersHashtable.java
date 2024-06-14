@@ -159,6 +159,16 @@ public class WorkersHashtable implements IWorkersRepository {
 
     }
 
+    @Override
+    public void save() {
+        //save if need file
+    }
+
+    @Override
+    public void load() {
+
+    }
+
     public Worker getByKey(int key) {
         return workers.get(key);
     }

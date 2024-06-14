@@ -1,6 +1,7 @@
 package lb.project.lb6_server.server.logic;
 
-import lb.project.lb6_server.lib.senders.SynchronizedExchangeChannel;
+import lb.project.lb6_server.lib.messages.Message;
+import lb.project.lb6_server.lib.senders.ServerExchangeChannel;
 import lb.project.lb6_server.lib.ui.UIController;
 import lb.project.lb6_server.server.logic.controllers.CommandsController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,11 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.concurrent.*;
 
 @Component
@@ -17,7 +23,7 @@ public class ServerApplication {
 
     @Autowired
     @Qualifier("ServerChannel")
-    private SynchronizedExchangeChannel exchangeChannel;
+    private ServerExchangeChannel exchangeChannel;
 
     @Autowired
     private CommandsController commandsController;

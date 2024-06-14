@@ -28,15 +28,17 @@ public class Register extends Command{
             return false;
         }
 
-        Message response = getExchangeChannel().recieveMessageWithTimeOut();
+        Message response = getExchangeChannel().receiveMessage();
         if (response == null)
             return false;
 
         if ((boolean)response.getEntity()) {
             setUser(user);
-            return true;
+            getUiController().show("Вы успешно зарегестрированы");
+            return false;
         }
 
-        return getExchangeChannel().sendMesssage(message);
+        return false;
+
     }
 }

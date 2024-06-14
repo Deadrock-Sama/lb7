@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 @Entity
+@Table(name = "workers",schema="s409677")
 public class Worker implements Comparable<Worker>, Serializable {
 
     public Worker() {
@@ -47,7 +48,8 @@ public class Worker implements Comparable<Worker>, Serializable {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "workersGen")
+    @SequenceGenerator(name = "workersGen", sequenceName = "workers_id_seq", allocationSize = 1, schema = "s409677")
     private Integer id;
     private String name;
     @OneToOne

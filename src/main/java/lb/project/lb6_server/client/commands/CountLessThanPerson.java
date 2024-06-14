@@ -3,7 +3,6 @@ package lb.project.lb6_server.client.commands;
 import lb.project.lb6_server.client.builders.PersonBuilder;
 import lb.project.lb6_server.lib.entities.Person;
 import lb.project.lb6_server.lib.messages.Message;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 
@@ -23,7 +22,7 @@ public class CountLessThanPerson extends DataManageCommand {
             return false;
         }
 
-        Message response = getExchangeChannel().recieveMessageWithTimeOut();
+        Message response = getExchangeChannel().receiveMessage();
         if (response == null)
             return false;
         int count = (Integer)response.getEntity();

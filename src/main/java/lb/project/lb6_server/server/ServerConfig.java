@@ -3,17 +3,16 @@ package lb.project.lb6_server.server;
 import lb.project.lb6_server.lib.senders.*;
 import lb.project.lb6_server.lib.ui.ConsoleController;
 import lb.project.lb6_server.lib.ui.UIController;
-import lb.project.lb6_server.server.data.IWorkersRepository;
 import lb.project.lb6_server.server.data.savers.ISaver;
 import lb.project.lb6_server.server.data.savers.json.JsonSaver;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.context.ApplicationContext;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+import javax.sql.DataSource;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
@@ -25,19 +24,13 @@ import java.net.SocketAddress;
 @EntityScan("lb.project.lb6_server.lib.entities")
 public class ServerConfig {
 
-    @Bean("CurrentKeeper")
-    public ISaver getJsonKeeper() {
-        keeper = new JsonSaver();
-        return keeper;
-    }
-
     @Bean("ConsoleController")
     public UIController getConsoleController() {
         return new ConsoleController();
     }
 
     @Bean("ServerChannel")
-    public SynchronizedExchangeChannel getChannel() {
+    public ServerExchangeChannel getChannel() {
 
         String port = System.getenv("SERVER_PORT");
         if (port==null) {
@@ -49,12 +42,28 @@ public class ServerConfig {
 
         SocketAddress serverAddress =  new InetSocketAddress(address, serverPort);
 
-        return new SynchronizedExchangeChannel(serverAddress);
+        return new ServerExchangeChannel(serverAddress);
 
     }
 
-    private ISaver keeper;
+    @Bean
+    public DataSource getDataSource() {
+        return DataSourceBuilder.create()
+                .driverClassName("org.postgresql.Driver")
+                //.url("jdbc:postgresql://pg:5432/studs?currentSchema=s409677")
+                //.username("s409677")
+                //.password("iZIywMzhnKf4Bd3L")
+                .url("jdbc:postgresql://localhost:5432/lb7?currentSchema=s409677")
+               .username("postgres")
+               .password("postgres")
+        .build();
 
 
+//                .driverClassName("org.postgresql.Driver")
+//                .url("jdbc:postgresql://pg:5432/studs")
+//                .username("s409677")
+//                .password("iZIywMzhnKf4Bd3L")
+//                .build();
+    }
 
 }

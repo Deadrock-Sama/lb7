@@ -2,15 +2,14 @@ package lb.project.lb6_server.client;
 import lb.project.lb6_server.lib.senders.*;
 import lb.project.lb6_server.lib.ui.ConsoleController;
 import lb.project.lb6_server.lib.ui.UIController;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-import javax.xml.crypto.Data;
-import java.io.IOException;
+import javax.sql.DataSource;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
-import java.nio.channels.DatagramChannel;
 
 @Configuration
 @ComponentScan
@@ -22,7 +21,7 @@ public class ClientConfig {
     }
 
     @Bean("ClientChannel")
-    public ExchangeChannel getChannel() {
+    public ClientExchangeChannel getChannel() {
 
         String cPort = System.getenv("CLIENT_PORT");
         if (cPort == null) {
@@ -42,8 +41,29 @@ public class ClientConfig {
         SocketAddress clientAddress =  new InetSocketAddress(address, clientPort);
         SocketAddress serverAddress =  new InetSocketAddress(address, serverPort);
 
-        return new ExchangeChannel(serverAddress, clientAddress);
+        return new ClientExchangeChannel(serverAddress, clientAddress);
 
+    }
+
+    @Bean
+    public DataSource getDataSource() {
+     //атстаньen
+        return DataSourceBuilder.create()
+                .driverClassName("org.postgresql.Driver")
+                .url("jdbc:postgresql://pg:5432/studs")
+                .username("s409677")
+                .password("iZIywMzhnKf4Bd3L")
+                //.url("jdbc:postgresql://localhost:5432/lb7?currentSchema=s409677")
+                //.username("postgres")
+                //.password("postgres")
+                .build();
+
+
+//                .driverClassName("org.postgresql.Driver")
+//                .url("jdbc:postgresql://pg:5432/studs")
+//                .username("s409677")
+//                .password("iZIywMzhnKf4Bd3L")
+//                .build();
     }
 
 

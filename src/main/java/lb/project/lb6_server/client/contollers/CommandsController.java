@@ -33,9 +33,6 @@ public class CommandsController implements ICommandsController{
 
             return command;
         }
-
-
-
         return empty;
     }
 

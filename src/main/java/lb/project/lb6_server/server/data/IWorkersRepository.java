@@ -33,5 +33,7 @@ public interface IWorkersRepository {
 
     List<Worker> sorted();
 
+    void save();
+    void load();
 
 }

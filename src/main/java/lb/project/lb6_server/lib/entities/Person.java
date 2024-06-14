@@ -7,10 +7,12 @@ import java.time.ZonedDateTime;
 import java.util.Objects;
 import java.util.UUID;
 @Entity
+@Table(name = "person",schema="s409677")
 public class Person implements Comparable<Person>, Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "personGen")
+    @SequenceGenerator(name = "personGen", sequenceName = "person_id_seq", allocationSize = 1, schema = "s409677")
     private Long id;
 
     public Person(ZonedDateTime birthday, Double height, Location location, String passportID) {

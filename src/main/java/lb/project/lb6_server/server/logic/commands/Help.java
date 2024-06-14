@@ -13,7 +13,7 @@ public class Help extends Command {
     public boolean exexute(Serializable entity, User user, SocketAddress address) {
 
         UIController controller = getUiController();
-        controller.show("save : сохранить коллекцию в файл");
+        controller.show("save : сохранить изменения в базе данных");
         return true;
     }
 }

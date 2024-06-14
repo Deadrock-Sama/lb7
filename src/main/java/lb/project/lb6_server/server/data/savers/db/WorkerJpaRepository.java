@@ -20,6 +20,7 @@ public interface WorkerJpaRepository  extends JpaRepository<Worker, Integer> {
         return new Hashtable<Integer, Worker>(findAll()
                 .stream()
                 .filter(Objects::nonNull)
+
                 .collect(Collectors.toMap(e -> e.getHashtableKey(), e -> e)));
     }
 

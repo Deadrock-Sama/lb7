@@ -3,7 +3,6 @@ package lb.project.lb6_server.client.commands;
 
 import lb.project.lb6_server.lib.entities.Worker;
 import lb.project.lb6_server.lib.messages.Message;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -20,7 +19,7 @@ public class PrintDescending extends DataManageCommand {
             return false;
         }
 
-        Message response = getExchangeChannel().recieveMessageWithTimeOut();
+        Message response = getExchangeChannel().receiveMessage();
         if (response == null)
             return false;
         List<Worker> workers = (List<Worker>)response.getEntity();

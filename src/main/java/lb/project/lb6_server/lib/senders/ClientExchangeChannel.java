@@ -3,38 +3,26 @@ package lb.project.lb6_server.lib.senders;
 import lb.project.lb6_server.lib.messages.Message;
 import org.springframework.util.SerializationUtils;
 
-import java.io.EOFException;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.DatagramPacket;
 import java.net.SocketAddress;
 import java.net.SocketTimeoutException;
-import java.net.StandardSocketOptions;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
-public class ExchangeChannel implements IExchangeChannel {
+public class ClientExchangeChannel implements IExchangeChannel {
 
     private SocketAddress target;
     private DatagramChannel channel;
 
-
-    private ExecutorService pool = Executors.newCachedThreadPool();
-
-    public ExchangeChannel(SocketAddress target, SocketAddress host) {
+    public ClientExchangeChannel(SocketAddress target, SocketAddress host) {
         this(host);
         this.target = target;
     }
 
-    public ExchangeChannel(SocketAddress host) {
+    public ClientExchangeChannel(SocketAddress host) {
         try {
             channel = DatagramChannel.open();
             channel.socket().setSoTimeout(200000);
@@ -58,22 +46,7 @@ public class ExchangeChannel implements IExchangeChannel {
 
     }
 
-    @Override
-    public Message recieveMessage() {
-        ByteBuffer buffer = ByteBuffer.allocate(4000);
-        try {
-            target = channel.receive(buffer);
-        } catch (IOException e) {
-            System.out.println("Адрес недоступен!");
-            throw new RuntimeException(e);
-        }
-
-        Message message = extractMessage(buffer);
-        return message;
-    }
-
-    public Message recieveMessageWithTimeOut() {
-
+    public Message receiveMessage() {
         byte[] bytes = new byte[4000];
         DatagramPacket packet;
         try {
@@ -81,9 +54,9 @@ public class ExchangeChannel implements IExchangeChannel {
             channel.socket().receive(packet);
             target = packet.getSocketAddress();
         } catch (SocketTimeoutException ex) {
+            System.out.println("Адрес недоступен!");
             return null;
         } catch (IOException e) {
-            System.out.println("Адрес недоступен!");
             throw new RuntimeException(e);
         }
 
@@ -91,19 +64,10 @@ public class ExchangeChannel implements IExchangeChannel {
         return message;
     }
 
+
     private Message extractMessage(byte[] bytes) {
         Message msg = new Message(bytes);
         return msg;
     }
 
-
-    private Message extractMessage(ByteBuffer buffer) {
-        Message msg = null;
-        try {
-            msg = new Message(buffer);
-        } catch (IOException e) {
-            return null;
-        }
-        return msg;
-    }
 }

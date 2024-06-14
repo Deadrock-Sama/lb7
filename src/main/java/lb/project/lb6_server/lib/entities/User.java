@@ -1,21 +1,19 @@
 package lb.project.lb6_server.lib.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 @Entity(name = "userDB")
-@Table(name = "usersDB")
+@Table(name = "usersdb", schema = "s409677")
 public class User implements Serializable {
 
     private String password;
     private String login;
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usersdbGen")
+    @SequenceGenerator(name = "usersdbGen", sequenceName = "usersdb_id_seq", allocationSize = 1, schema = "s409677")
     private Integer id;
 
 

@@ -1,16 +1,16 @@
 package lb.project.lb6_server.lib.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.Objects;
 @Entity
+@Table(name = "coordinates",schema="s409677")
 public class Coordinates implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "coordinatesGen")
+    @SequenceGenerator(name = "coordinatesGen", sequenceName = "coordinates_id_seq", allocationSize = 1, schema = "s409677")
     private Long id;
 
     public Coordinates(double x, Long y) {
