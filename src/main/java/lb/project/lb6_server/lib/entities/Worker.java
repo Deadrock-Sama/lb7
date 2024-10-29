@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
+
 @Entity
 @Table(name = "workers",schema="s409677")
 public class Worker implements Comparable<Worker>, Serializable {

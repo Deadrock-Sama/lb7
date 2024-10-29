@@ -7,5 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface UserJpaRepository extends JpaRepository<User, Integer> {
 
      boolean existsUserByLoginAndPassword(String login, String password);
+     
+     boolean existsUserByIdBetween(int id1, int id2);
 
 }
